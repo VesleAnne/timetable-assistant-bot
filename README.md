@@ -506,6 +506,25 @@ pytest tests/
 - 🔲 Recurring event detection
 - 🔲 Calendar integration
 - 🔲 Web dashboard for analytics
+- 🔲 **ML-powered context understanding** for ambiguous cases: 
+  - Standalone numbers: "meeting at 15" → recognize as time when contextually appropriate
+  - Decimal notation: "15.30" → detect as time based on message context
+  - Relative times: "in 2 hours", "in 15 minutes"
+  - Natural phrases: "after lunch", "end of day"
+  - Implementation: Small ML model (BERT/transformer-based) for context analysis
+  - Benefit: Reduces false negatives while maintaining low false positive rate
+- 🔲 Natural language date parsing ("next Thursday at 3", "in two weeks")
+- 🔲 Google Calendar / Outlook integration
+
+---
+
+**Note:** Advanced NLP features (ML-based context understanding) are intentionally out of scope for MVP to maintain simplicity and reliability. The current regex-based parser provides:
+- ✅ High precision (low false positives)
+- ✅ Fast processing
+- ✅ Easy to debug and maintain
+- ✅ No external dependencies or API calls
+
+
 
 ---
 
