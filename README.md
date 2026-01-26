@@ -6,7 +6,7 @@ A Discord and Telegram bot that detects time mentions in chat messages and conve
 
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Tests](https://img.shields.io/badge/tests-116%20passing-brightgreen.svg)](tests/)
+[![Tests](https://img.shields.io/badge/tests-166%20passing-brightgreen.svg)](tests/)
 
 ---
 
@@ -237,7 +237,7 @@ pytest tests/ -v
 pytest tests/ --cov=src --cov-report=html
 ```
 
-**Current test coverage**: 116 tests, all passing ✅
+**Current test coverage**: 166 tests, all passing ✅
 
 Tests cover:
 - Time parsing (English & Russian)
@@ -513,7 +513,6 @@ pytest tests/
   - Natural phrases: "after lunch", "end of day"
   - Implementation: Small ML model (BERT/transformer-based) for context analysis
   - Benefit: Reduces false negatives while maintaining low false positive rate
-- 🔲 Natural language date parsing ("next Thursday at 3", "in two weeks")
 - 🔲 Google Calendar / Outlook integration
 
 ---
@@ -523,6 +522,18 @@ pytest tests/
 - ✅ Fast processing
 - ✅ Easy to debug and maintain
 - ✅ No external dependencies or API calls
+
+**Note:** Why not WhatsApp for MVP?
+
+As of January 2026, Meta has significantly restricted WhatsApp Business API usage:
+-  General-purpose chatbots banned (only business support bots allowed)
+-  Requires business verification (1-6 weeks approval time)
+-  Mandatory: Legal business registration, website with privacy policy
+-  Business Solution Provider (BSP) required (12-35% markup on costs)
+-  All messages need pre-approved templates
+-  Strict compliance requirements and policy enforcement
+
+**Decision:** MVP prioritizes Discord + Telegram for faster deployment and simpler compliance. WhatsApp may be considered post-MVP if business case justifies the additional complexity.
 
 
 
