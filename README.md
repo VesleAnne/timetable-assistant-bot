@@ -190,6 +190,7 @@ timetable-assistant-bot/
 ├── README.md                   # You are here
 ├── pyproject.toml             # Package configuration
 ├── requirements.txt           # Core dependencies
+├── requirements-dev.txt       # For development 
 ├── configuration.yaml         # Bot settings
 │
 ├── docs/
@@ -429,13 +430,6 @@ Users can delete their data anytime with `/delete_me`.
 
 ## 🚦 **Production Deployment**
 
-### Using systemd (Linux)
-
-```bash
-# See docs/INSTALL.md for full systemd service configuration
-sudo systemctl enable timetable-bot-telegram
-sudo systemctl start timetable-bot-telegram
-```
 
 ### Using Docker
 
