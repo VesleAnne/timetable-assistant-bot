@@ -407,7 +407,21 @@ The bot MUST support a user command to delete their stored data:
 No user activity timestamps are stored in MVP.
 
 ## 13. Error Handling
-User-facing errors and fallbacks.
+
+### Unknown Timezone
+When user mentions unrecognized timezone, bot responds:
+- EN: "I couldn't recognize timezone {name}. Try using an IANA timezone, e.g.: Europe/Berlin"
+- RU: "Не удалось распознать часовой пояс {name}. Попробуйте формат IANA, например: Europe/Berlin"
+
+### Missing User Timezone
+When sender has no configured timezone and no explicit timezone in message:
+- EN: "I don't know your timezone yet. Set it with: /tz set Europe/Amsterdam"
+- RU: "Я не знаю ваш часовой пояс. Установите его командой: /tz set Europe/Amsterdam"
+
+### Invalid Timezone Format
+When explicit timezone cannot be converted (e.g., invalid UTC offset):
+- EN: "Could not resolve the timezone mentioned in the message."
+- RU: "Не удалось распознать часовой пояс в сообщении."
 
 ## 14. Observability
 ### 14.1 Logging
@@ -455,7 +469,29 @@ Telegram:
 - feedback_submitted
 
 ## 15. Acceptance Criteria
-A checklist of must-have behaviors.
+
+MVP is complete when:
+- [ ] All 166 tests passing
+- [ ] Discord bot detects times and shows conversion button
+- [ ] Telegram bot converts times in group replies
+- [ ] English and Russian parsing works
+- [ ] Timezone conversion respects DST
+- [ ] Date anchors (today/tomorrow/weekdays) resolve correctly
+- [ ] Admin commands work for monitoring configuration
+- [ ] User timezone management works (/tz set/show/clear)
+- [ ] Docker deployment works
+- [ ] Documentation complete (README, spec, install guide)
 
 ## 16. Non-Goals (Explicitly Out of Scope)
-List what we are *not* doing in this version.
+
+The following are NOT included in MVP:
+- WhatsApp integration
+- Support for edited messages
+- Comprehensive city name coverage (only curated list)
+- Natural language parsing ("in 2 hours", "next Thursday at 3")
+- Automatic timezone detection from message metadata
+- User activity retention timestamps
+- Advanced rate limiting beyond basic spam prevention
+- Web dashboard for analytics
+- Calendar integration
+- Recurring event detection
