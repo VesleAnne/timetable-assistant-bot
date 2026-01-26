@@ -1,0 +1,130 @@
+version: '3.8'
+
+services:
+  # =============================================================================
+  # Telegram Bot Service
+  # =============================================================================
+  telegram:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: timetable-bot-telegram
+    restart: unless-stopped
+    
+    # Override default command to run telegram bot
+    command: ["telegram", "--log-level", "INFO"]
+    
+    environment:
+      # Bot tokens from .env file
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - SQLITE_PATH=/app/data/bot.db
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+    
+    volumes:
+      # Persist database
+      - telegram-data:/app/data
+      # Optional: Mount config for easy editing
+      - ./configuration.yaml:/app/configuration.yaml:ro
+    
+    # Logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # =============================================================================
+  # Discord Bot Service
+  # =============================================================================
+  discord:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: timetable-bot-discord
+    restart: unless-stopped
+    
+    # Override default command to run discord bot
+    command: ["discord", "--log-level", "INFO"]
+    
+    environment:
+      # Bot tokens from .env file
+      - DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN}
+      - SQLITE_PATH=/app/data/bot.db
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+    
+    volumes:
+      # Persist database
+      - discord-data:/app/data
+      # Optional: Mount config for easy editing
+      - ./configuration.yaml:/app/configuration.yaml:ro
+    
+    # Logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # =============================================================================
+  # Combined Service (Both Platforms)
+  # =============================================================================
+  # Note: This is NOT recommended for production as both bots share the same
+  # SQLite database, which may cause locking issues. Use separate services above.
+  # 
+  # To run both platforms, use:
+  #   docker-compose up telegram discord
+  #
+  # combined:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   container_name: timetable-bot-combined
+  #   restart: unless-stopped
+  #   
+  #   environment:
+  #     - DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN}
+  #     - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+  #     - SQLITE_PATH=/app/data/bot.db
+  #   
+  #   volumes:
+  #     - combined-data:/app/data
+
+# =============================================================================
+# Volumes for data persistence
+# =============================================================================
+volumes:
+  telegram-data:
+    driver: local
+  discord-data:
+    driver: local
+  # combined-data:
+  #   driver: local
+
+# =============================================================================
+# Usage Examples:
+# =============================================================================
+#
+# Run Telegram bot:
+#   docker-compose up -d telegram
+#
+# Run Discord bot:
+#   docker-compose up -d discord
+#
+# Run both (separate databases):
+#   docker-compose up -d telegram discord
+#
+# View logs:
+#   docker-compose logs -f telegram
+#   docker-compose logs -f discord
+#
+# Stop services:
+#   docker-compose down
+#
+# Rebuild after code changes:
+#   docker-compose build
+#   docker-compose up -d telegram
+#
+# Access container shell:
+#   docker-compose exec telegram sh
+#
+# =============================================================================

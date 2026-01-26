@@ -1,0 +1,39 @@
+#env overrides this in production
+
+platforms:
+  discord:
+    enabled: true
+    limits:
+      max_time_mentions_per_message: 10
+  telegram:
+    enabled: true
+    limits:
+      max_time_mentions_per_message: 10
+      max_active_timezones_in_public_reply: 12
+
+behavior:
+  respond_to_edited_messages: false
+  ignore_bots: true
+
+i18n:
+  supported_languages: [en, ru]
+  default_language: en
+  reply_language: match_message
+
+telegram:
+  dm_delivery:
+    enabled: true
+
+storage:
+  backend: sqlite
+  sqlite_path: "./data/bot.db"
+
+metrics:
+  enabled: true
+  store_events_in_db: true
+
+formatting:
+  mirror_sender_time_format: true
+  timezone_label_style: city_name
+  telegram_sort_order: utc_offset
+  show_day_markers_on_rollover: true
