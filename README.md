@@ -589,8 +589,6 @@ Built to solve real timezone coordination challenges for distributed teams acros
 
 <div align="center">
 
-**Made with ❤️ for distributed teams everywhere**
-
 [⬆ Back to Top](#timetable-assistant-bot)
 
 </div>
