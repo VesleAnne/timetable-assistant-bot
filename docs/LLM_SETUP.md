@@ -34,7 +34,7 @@ python -m src.main telegram
 
 ## Alternative Providers
 
-### OpenAI (Production Ready)
+### OpenAI 
 ```bash
 # Install
 pip install openai
@@ -45,7 +45,7 @@ LLM_API_KEY=sk-...
 LLM_MODEL=gpt-4o-mini
 ```
 
-### Google Gemini (Free Tier)
+### Google Gemini 
 ```bash
 # Install
 pip install google-generativeai
@@ -65,6 +65,21 @@ pip install anthropic
 LLM_PROVIDER=anthropic
 LLM_API_KEY=sk-ant-...
 LLM_MODEL=claude-3-5-haiku-20241022
+```
+
+### Ollama
+
+
+```bash
+
+# No pip install needed, just install Ollama app
+# Download from: https://ollama.ai
+#Then pull the model of your choice
+
+# Configure
+LLM_PROVIDER=ollama
+LLM_MODEL='gemma3:1b'
+OLLAMA_BASE_URL=http://localhost:11434
 ```
 
 ## How It Works
