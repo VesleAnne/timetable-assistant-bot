@@ -97,43 +97,69 @@ class ConvertForMeView(discord.ui.View):
     When clicked, we fetch the referenced original message and convert for the clicker.
     """
 
-    def __init__(self, engine: Engine) -> None:
+    def __init__(self, storage: SQLiteStorage, engine: Engine) -> None:
         super().__init__(timeout=None)
+        self.storage = storage
         self.engine = engine
 
     @discord.ui.button(label="Convert for me", style=discord.ButtonStyle.primary, custom_id="convert_for_me")
     async def convert_for_me(self, interaction: discord.Interaction, button: discord.ui.Button):
-        # The bot message should be a reply to the original time message
-        if not interaction.message or not interaction.channel:
-            await interaction.response.send_message("Cannot find original message context.", ephemeral=True)
-            return
-
-        if not interaction.message.reference or not interaction.message.reference.message_id:
-            await interaction.response.send_message("Cannot find the message to convert.", ephemeral=True)
-            return
-
-        try:
-            original_msg = await interaction.channel.fetch_message(interaction.message.reference.message_id)
-        except Exception:
-            await interaction.response.send_message("Could not fetch the original message.", ephemeral=True)
-            return
-
-        clicker_id = str(interaction.user.id)
-        original_sender_id = str(original_msg.author.id)
-        original_text = original_msg.content or ""
-
-        result = self.engine.discord_build_ephemeral_conversion_for_clicker(
-            original_message_text=original_text,
-            original_sender_id=original_sender_id,
-            clicking_user_id=clicker_id,
+        """Handle convert button click."""
+        
+        # Defer immediately (Discord gives only 3 seconds!)
+        await interaction.response.defer(ephemeral=True)
+        
+        clicker_user_id = str(interaction.user.id)
+        
+        # Get clicker's timezone
+        clicker_tz = self.storage.get_user_timezone(
+            platform="discord", user_id=clicker_user_id
         )
-
-        if result is None:
-            await interaction.response.send_message("No time mentions found.", ephemeral=True)
+        
+        if not clicker_tz:
+            # Send onboarding message
+            await interaction.followup.send(
+                "I don't know your timezone yet! Set it with: `/tz set Europe/Amsterdam`",
+                ephemeral=True
+            )
             return
-
-        await interaction.response.send_message(result.text, ephemeral=True)
-
+        
+        # Get the message this button is attached to
+        bot_message = interaction.message
+        if not bot_message or not bot_message.reference:
+            await interaction.followup.send(
+                "⚠️ Could not find the original message.",
+                ephemeral=True
+            )
+            return
+        
+        # Fetch the original message
+        try:
+            original_message = await bot_message.channel.fetch_message(bot_message.reference.message_id)
+        except Exception as e:
+            logger.error(f"Failed to fetch original message: {e}")
+            await interaction.followup.send(
+                "⚠️ Could not fetch the original message.",
+                ephemeral=True
+            )
+            return
+        
+        # Process with engine - use the correct method!
+        result = self.engine.discord_build_ephemeral_conversion_for_clicker(
+            original_message_text=original_message.content or "",
+            original_sender_id=str(original_message.author.id),
+            clicking_user_id=clicker_user_id,
+        )
+        
+        if result is None:
+            await interaction.followup.send(
+                "No conversion available.",
+                ephemeral=True
+            )
+            return
+        
+        # Send ephemeral response
+        await interaction.followup.send(result.text, ephemeral=True) 
 
 class DiscordBot(discord.Client):
     """
@@ -170,7 +196,7 @@ class DiscordBot(discord.Client):
         Register persistent views and sync commands.
         """
         # Now we can add the view (event loop exists)
-        self.add_view(ConvertForMeView(self.engine))
+        self.add_view(ConvertForMeView(self.storage, self.engine))
         
         # Sync slash commands with Discord
         await self.tree.sync()
@@ -311,7 +337,7 @@ class DiscordBot(discord.Client):
         try:
             await message.reply(
                 prompt.text,
-                view=ConvertForMeView(self.engine),
+                view=ConvertForMeView(self.storage, self.engine),
                 mention_author=False,
             )
         except Exception as e:

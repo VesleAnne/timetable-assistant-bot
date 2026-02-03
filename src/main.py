@@ -8,6 +8,10 @@ from .config import load_settings
 from .discord_bot import DiscordBot, DiscordBotSettings
 from .telegram_bot import TelegramBot, TelegramBotSettings
 
+from dotenv import load_dotenv
+load_dotenv()  
+
+# ... остальной код
 
 def _setup_logging(level: str) -> None:
     lvl = getattr(logging, level.upper(), logging.INFO)

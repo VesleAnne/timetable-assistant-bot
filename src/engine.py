@@ -11,7 +11,8 @@ from .models import (
     Platform,
     SourceTimezoneResolution,
 )
-from .parser import parse_message
+#from .parser import parse_message
+from .llm.hybrid_parser import parse_message
 from .conversion import resolve_anchor_date, convert_mentions, TimezoneConversionError
 from .formatting import (
     DisplayTimezone,

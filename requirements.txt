@@ -5,3 +5,22 @@ pydantic-settings>=2.0
 discord.py>=2.3.0
 python-telegram-bot>=20.0,<21.0
 tzdata>=2023.3
+requests>=2.31.0
+
+# LLM Providers (install only the one you use)
+
+
+# Option 1: OpenAI (for example GPT-4o-mini)
+# openai>=1.0.0
+
+# Option 2: Anthropic (Claude)
+# anthropic>=0.18.0
+
+# Option 3: Google (Gemini)
+# google-generativeai>=0.3.0
+
+# Option 4: Ollama (local models)
+# FREE - runs on your machine
+# No pip install needed, just install Ollama app
+# Download from: https://ollama.ai
+
