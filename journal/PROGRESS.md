@@ -22,7 +22,7 @@ This file tracks implementation progress, scope boundaries, and decisions made w
 ## Current Work Items
 - [x] spec.md finalized
 - [x] acceptance_tests.md created
-- [x] architecture.md drafted (simplified repo structure)
+- [x] architecture.md drafted 
 - [x] configuration.yaml schema defined
 - [x] src/config.py implemented (env overrides YAML)
 - [x] src/storage.py implemented (SQLite)

@@ -6,7 +6,7 @@ A Discord and Telegram bot that detects time mentions in chat messages and conve
 
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Tests](https://img.shields.io/badge/tests-116%20passing-brightgreen.svg)](tests/)
+[![Tests](https://img.shields.io/badge/tests-166%20passing-brightgreen.svg)](tests/)
 
 ---
 
@@ -190,6 +190,7 @@ timetable-assistant-bot/
 ├── README.md                   # You are here
 ├── pyproject.toml             # Package configuration
 ├── requirements.txt           # Core dependencies
+├── requirements-dev.txt       # For development 
 ├── configuration.yaml         # Bot settings
 │
 ├── docs/
@@ -236,7 +237,7 @@ pytest tests/ -v
 pytest tests/ --cov=src --cov-report=html
 ```
 
-**Current test coverage**: 116 tests, all passing ✅
+**Current test coverage**: 166 tests, all passing ✅
 
 Tests cover:
 - Time parsing (English & Russian)
@@ -429,13 +430,6 @@ Users can delete their data anytime with `/delete_me`.
 
 ## 🚦 **Production Deployment**
 
-### Using systemd (Linux)
-
-```bash
-# See docs/INSTALL.md for full systemd service configuration
-sudo systemctl enable timetable-bot-telegram
-sudo systemctl start timetable-bot-telegram
-```
 
 ### Using Docker
 
@@ -512,6 +506,36 @@ pytest tests/
 - 🔲 Recurring event detection
 - 🔲 Calendar integration
 - 🔲 Web dashboard for analytics
+- 🔲 **ML-powered context understanding** for ambiguous cases: 
+  - Standalone numbers: "meeting at 15" → recognize as time when contextually appropriate
+  - Decimal notation: "15.30" → detect as time based on message context
+  - Relative times: "in 2 hours", "in 15 minutes"
+  - Natural phrases: "after lunch", "end of day"
+  - Implementation: Small ML model (BERT/transformer-based) for context analysis
+  - Benefit: Reduces false negatives while maintaining low false positive rate
+- 🔲 Google Calendar / Outlook integration
+
+---
+
+**Note:** Advanced NLP features (ML-based context understanding) are intentionally out of scope for MVP to maintain simplicity and reliability. The current regex-based parser provides:
+- ✅ High precision (low false positives)
+- ✅ Fast processing
+- ✅ Easy to debug and maintain
+- ✅ No external dependencies or API calls
+
+**Note:** Why not WhatsApp for MVP?
+
+As of January 2026, Meta has significantly restricted WhatsApp Business API usage:
+-  General-purpose chatbots banned (only business support bots allowed)
+-  Requires business verification (1-6 weeks approval time)
+-  Mandatory: Legal business registration, website with privacy policy
+-  Business Solution Provider (BSP) required (12-35% markup on costs)
+-  All messages need pre-approved templates
+-  Strict compliance requirements and policy enforcement
+
+**Decision:** MVP prioritizes Discord + Telegram for faster deployment and simpler compliance. WhatsApp may be considered post-MVP if business case justifies the additional complexity.
+
+
 
 ---
 
@@ -564,8 +588,6 @@ Built to solve real timezone coordination challenges for distributed teams acros
 ---
 
 <div align="center">
-
-**Made with ❤️ for distributed teams everywhere**
 
 [⬆ Back to Top](#timetable-assistant-bot)
 
